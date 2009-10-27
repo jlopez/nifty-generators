@@ -211,6 +211,8 @@ protected
     opt.on("--testunit", "Use test/unit for test files.") { options[:test_framework] = :testunit }
     opt.on("--rspec", "Use RSpec for test files.") { options[:test_framework] = :rspec }
     opt.on("--shoulda", "Use Shoulda for test files.") { options[:test_framework] = :shoulda }
+    opt.on("--json", "Add support for JSON web api.") { |v| options[:json] = v }
+    opt.on("--xml", "Add support for XML web api.") { |v| options[:xml] = v }
   end
   
   # is there a better way to do this? Perhaps with const_defined?
