@@ -3,7 +3,11 @@
 <%- for attribute in attributes -%>
 <p>
   <strong><%= attribute.column.human_name.titleize %>:</strong>
+  <%- if attribute.reference? -%>
+  <%%=link_to @<%= singular_name %>.<%= attribute.name %>, @<%= singular_name %>.<%= attribute.name %> %>
+  <%- else -%>
   <%%=h @<%= singular_name %>.<%= attribute.name %> %>
+  <%- end -%>
 </p>
 <%- end -%>
 

@@ -3,7 +3,7 @@
 <%- for attribute in attributes -%>
   <p>
     <%%= f.label :<%= attribute.name %> %><br />
-    <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>
+    <%%= f.<%= attribute.field_type %> <%= attribute.field_parameters %> %>
   </p>
 <%- end -%>
   <p><%%= f.submit "Submit" %></p>

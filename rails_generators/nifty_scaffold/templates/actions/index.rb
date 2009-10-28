@@ -1,5 +1,5 @@
   def index
-    @<%= plural_name %> = <%= class_name %>.all
+    @<%= plural_name %> = filter_model(<%= references.map {|r| ":#{r.column_name}" }.join ', ' %>)
   <%- if options[:xml] || options[:json] -%>
 
     respond_to do |format|

@@ -1,5 +1,5 @@
   def new
-    @<%= singular_name %> = <%= class_name %>.new
+    @<%= singular_name %> = <%= class_name %>.new(<%= references.map {|r| ":#{r.column_name} => params[:#{r.column_name}]" }.join ', ' %>)
   <%- if options[:xml] || options[:json] -%>
 
     respond_to do |format|

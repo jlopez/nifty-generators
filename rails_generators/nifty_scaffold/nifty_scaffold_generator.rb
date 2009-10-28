@@ -1,3 +1,25 @@
+class GeneratedAttribute < Rails::Generator::GeneratedAttribute
+  def column_name
+    reference? ? "#{name}_id" : name
+  end
+
+  def field_type
+    @field_type ||= case type
+      when :references, :belong_to    then :collection_select
+      else
+        super
+    end
+  end
+
+  def field_parameters
+    if reference?
+      ":#{column_name}, #{name.camelize}.all, :id, :to_s"
+    else
+      ":#{column_name}"
+    end
+  end
+end
+
 class NiftyScaffoldGenerator < Rails::Generator::Base
   attr_accessor :name, :attributes, :controller_actions
   
@@ -13,7 +35,7 @@ class NiftyScaffoldGenerator < Rails::Generator::Base
       if arg == '!'
         options[:invert] = true
       elsif arg.include? ':'
-        @attributes << Rails::Generator::GeneratedAttribute.new(*arg.split(":"))
+        @attributes << GeneratedAttribute.new(*arg.split(":"))
       else
         @controller_actions << arg
         @controller_actions << 'create' if arg == 'new'
@@ -81,6 +103,16 @@ class NiftyScaffoldGenerator < Rails::Generator::Base
         end
       
         m.route_resources plural_name
+        references.each do |ref|
+          look_for = "map.resources :#{ref.name.pluralize}"
+          m.gsub_file "config/routes.rb",
+            /#{look_for}(?:, :has_many => \[\s*(.*)\])?$/,
+            "#{look_for}, :has_many => [ :#{plural_name}, \\1]"
+
+          m.gsub_file "app/models/#{ref.name}.rb",
+            /#:Relationships$/,
+            "\\&\n  has_many :#{plural_name}, :dependent => :destroy"
+        end
         
         if rspec?
           m.directory "spec/controllers"
@@ -123,6 +155,10 @@ class NiftyScaffoldGenerator < Rails::Generator::Base
   
   def plural_class_name
     plural_name.camelize
+  end
+
+  def references
+    @references ||= attributes.select { |a| a.reference? }
   end
   
   def controller_methods(dir_name)
