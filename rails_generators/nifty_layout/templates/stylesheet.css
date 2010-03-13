@@ -12,6 +12,18 @@ a {
   color: #0000FF;
 }
 
+table.index th {
+  padding: 0px 8px;
+}
+
+table.index td {
+  padding: 0px 8px;
+}
+
+table.index td.command {
+  padding: 0px 1px;
+}
+
 .clear {
   clear: both;
   height: 0;
@@ -78,4 +90,10 @@ a {
 #errorExplanation ul li {
   font-size: 12px;
   list-style: disc;
+}
+
+.na {
+  color: #AAA;
+  font-style: italic;
+  text-align: center;
 }
